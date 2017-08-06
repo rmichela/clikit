@@ -10,8 +10,8 @@ func main() {
 
 	clikit.FillBgBox(1, 1, 20, 10, termbox.ColorRed)
 	clikit.DrawBorder(1, 1, 20, 10, clikit.BorderStyleDouble, termbox.ColorWhite)
-	clikit.DrawCappedHorizLine(1, 5, 20, '╟', '─', '╢', termbox.ColorWhite)
-	clikit.DrawCappedVertLine(5, 1, 10, '╤', '│', '╧', termbox.ColorWhite)
+	clikit.DrawHorizLineStyle(1, 5, 20, clikit.LineStyleSingleWithDoubleCaps, termbox.ColorWhite)
+	clikit.DrawVertLineStyle(5, 1, 10, clikit.LineStyleSingleWithDoubleCaps, termbox.ColorWhite)
 	termbox.Flush()
 
 	termbox.PollEvent()

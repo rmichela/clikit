@@ -113,3 +113,53 @@ var BorderStyleDouble = BorderStyle{
 	BottomLeft:  '╚',
 	BottomRight: '╝',
 }
+
+// LineStyle describes the characters that make up a drawn line with endcaps.
+type LineStyle struct {
+	TopCap    rune
+	Vert      rune
+	BottomCap rune
+	LeftCap   rune
+	Horiz     rune
+	RightCap  rune
+}
+
+// LineStyleSingle is a line of single-stroke line drawing characters.
+var LineStyleSingle = LineStyle{
+	TopCap:    '│',
+	Vert:      '│',
+	BottomCap: '│',
+	LeftCap:   '─',
+	Horiz:     '─',
+	RightCap:  '─',
+}
+
+// LineStyleSingleWithDoubleCaps is a line of single-stroke line drawing characters with duble-strike caps.
+var LineStyleSingleWithDoubleCaps = LineStyle{
+	TopCap:    '╤',
+	Vert:      '│',
+	BottomCap: '╧',
+	LeftCap:   '╟',
+	Horiz:     '─',
+	RightCap:  '╢',
+}
+
+// LineStyleDouble is a line of double-stroke line drawing characters.
+var LineStyleDouble = LineStyle{
+	TopCap:    '║',
+	Vert:      '║',
+	BottomCap: '║',
+	LeftCap:   '═',
+	Horiz:     '═',
+	RightCap:  '═',
+}
+
+// LineStyleDoubleWithSingleCaps is a line of double-stroke line drawing characters with single-strike caps.
+var LineStyleDoubleWithSingleCaps = LineStyle{
+	TopCap:    '╥',
+	Vert:      '║',
+	BottomCap: '╨',
+	LeftCap:   '╞',
+	Horiz:     '═',
+	RightCap:  '╡',
+}

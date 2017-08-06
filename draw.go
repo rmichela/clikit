@@ -42,6 +42,12 @@ func DrawCappedHorizLine(x, y, len int, left, middle, right rune, fg termbox.Att
 	DrawRuneFg(x+len-1, y, right, fg)
 }
 
+// DrawHorizLineStyle draws a horizontal line with a given style in the foreground,
+// preserving the background.
+func DrawHorizLineStyle(x, y, len int, style LineStyle, fg termbox.Attribute) {
+	DrawCappedHorizLine(x, y, len, style.LeftCap, style.Horiz, style.RightCap, fg)
+}
+
 // DrawVertLine draws a horizontal line with a given rune in the foreground,
 // preserving the background.
 func DrawVertLine(x, y, len int, ch rune, fg termbox.Attribute) {
@@ -58,6 +64,12 @@ func DrawCappedVertLine(x, y, len int, top, middle, bottom rune, fg termbox.Attr
 	DrawRuneFg(x, y, top, fg)
 	DrawVertLine(x, y+1, len-2, middle, fg)
 	DrawRuneFg(x, y+len-1, bottom, fg)
+}
+
+// DrawVertLineStyle draws a vertical line with a given style in the foreground,
+// preserving the background.
+func DrawVertLineStyle(x, y, len int, style LineStyle, fg termbox.Attribute) {
+	DrawCappedVertLine(x, y, len, style.TopCap, style.Vert, style.BottomCap, fg)
 }
 
 // DrawRuneFg draws a rune in the foreground, preserving the background.
