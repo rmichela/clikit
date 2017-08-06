@@ -35,9 +35,9 @@ type Palate struct {
 	Style256 StyleMap
 }
 
-// BlackAndWhiteColorPalate is a simple color palate for drawing the UI in
+// PalateBlackAndWhite is a simple color palate for drawing the UI in
 // only black and white.
-var BlackAndWhiteColorPalate = Palate{
+var PalateBlackAndWhite = Palate{
 	Style16: StyleMap{
 		DefaultFG: termbox.ColorWhite,
 		DefaultBG: termbox.ColorBlack},
@@ -45,9 +45,9 @@ var BlackAndWhiteColorPalate = Palate{
 		DefaultFG: termbox.ColorWhite,
 		DefaultBG: termbox.ColorBlack}}
 
-// DefaultColorPalate implements a basic 16-color palate for both 16 and 256
+// PalateDefault implements a basic 16-color palate for both 16 and 256
 // color modes.
-var DefaultColorPalate = Palate{
+var PalateDefault = Palate{
 	Style16: StyleMap{
 		DefaultFG: termbox.ColorWhite,
 		DefaultBG: termbox.ColorBlack,
@@ -76,6 +76,35 @@ var DefaultColorPalate = Palate{
 			StyleWhite:   termbox.ColorWhite,
 		},
 	},
+}
+
+// Resolve foreground and background attributes for a named style, returning defaults if not found.
+func (p *Palate) Resolve(style string) (foreground, background termbox.Attribute) {
+	var stylemap *StyleMap
+	if currentOutputMode == termbox.OutputNormal {
+		stylemap = &p.Style16
+	} else if currentOutputMode == termbox.Output256 {
+		stylemap = &p.Style256
+	}
+
+	// default styles, if nothing is found
+	var fg = termbox.ColorWhite
+	var bg = termbox.ColorBlack
+
+	// find the styles in the map
+	if stylemap != nil {
+		var found bool
+		fg, found = stylemap.StyleFG[style]
+		if !found {
+			fg = stylemap.DefaultFG
+		}
+		bg, found = stylemap.StyleBG[style]
+		if !found {
+			bg = stylemap.DefaultBG
+		}
+	}
+
+	return fg, bg
 }
 
 // BorderStyle describes the characters that make up a drawn border.

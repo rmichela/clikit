@@ -6,12 +6,15 @@ import (
 )
 
 func main() {
-	chkerr(clikit.Init())
+	chkerr(clikit.Init(termbox.OutputNormal))
 
-	clikit.FillBgBox(1, 1, 20, 10, termbox.ColorRed)
-	clikit.DrawBorder(1, 1, 20, 10, clikit.BorderStyleDouble, termbox.ColorWhite)
-	clikit.DrawHorizLineStyle(1, 5, 20, clikit.LineStyleSingleWithDoubleCaps, termbox.ColorWhite)
-	clikit.DrawVertLineStyle(5, 1, 10, clikit.LineStyleSingleWithDoubleCaps, termbox.ColorWhite)
+	fg, bg := clikit.PalateDefault.Resolve(clikit.StyleRed)
+
+	clikit.FillBgBox(0, 0, 22, 12, termbox.ColorGreen)
+	clikit.FillBgBox(1, 1, 20, 10, bg)
+	clikit.DrawBorder(1, 1, 20, 10, clikit.BorderStyleDouble, fg)
+	clikit.DrawHorizLineStyle(1, 5, 20, clikit.LineStyleSingleWithDoubleCaps, fg)
+	clikit.DrawVertLineStyle(5, 1, 10, clikit.LineStyleSingleWithDoubleCaps, fg)
 	termbox.Flush()
 
 	termbox.PollEvent()
