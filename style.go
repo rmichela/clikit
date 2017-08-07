@@ -4,6 +4,7 @@ import termbox "github.com/nsf/termbox-go"
 
 // Standard style name constants
 const (
+	// Color styles
 	StyleBlack   = "black"
 	StyleRed     = "red"
 	StyleGreen   = "green"
@@ -12,6 +13,10 @@ const (
 	StyleMagenta = "magenta"
 	StyleCyan    = "cyan"
 	StyleWhite   = "white"
+	// Component styles
+	StyleComponentBackground = "component_background"
+	StyleComponentBorder     = "component_border"
+	StyleComponentLabel      = "component_label"
 )
 
 // StyleMap is a mapping of style names to termbox Attributes
@@ -52,6 +57,7 @@ var PalateDefault = Palate{
 		DefaultFG: termbox.ColorWhite,
 		DefaultBG: termbox.ColorBlack,
 		StyleFG: map[string]termbox.Attribute{
+			// Color Styles
 			StyleBlack:   termbox.ColorBlack,
 			StyleRed:     termbox.ColorRed,
 			StyleGreen:   termbox.ColorGreen,
@@ -60,31 +66,25 @@ var PalateDefault = Palate{
 			StyleMagenta: termbox.ColorMagenta,
 			StyleCyan:    termbox.ColorCyan,
 			StyleWhite:   termbox.ColorWhite,
-		},
-	},
-	Style256: StyleMap{
-		DefaultFG: termbox.ColorWhite,
-		DefaultBG: termbox.ColorBlack,
-		StyleFG: map[string]termbox.Attribute{
-			StyleBlack:   termbox.ColorBlack,
-			StyleRed:     termbox.ColorRed,
-			StyleGreen:   termbox.ColorGreen,
-			StyleYellow:  termbox.ColorYellow,
-			StyleBlue:    termbox.ColorBlue,
-			StyleMagenta: termbox.ColorMagenta,
-			StyleCyan:    termbox.ColorCyan,
-			StyleWhite:   termbox.ColorWhite,
+			// Component Styles
+			StyleComponentBackground: termbox.ColorBlack,
+			StyleComponentBorder:     termbox.ColorBlue,
+			StyleComponentLabel:      termbox.ColorYellow,
 		},
 	},
 }
 
 // Resolve foreground and background attributes for a named style, returning defaults if not found.
 func (p *Palate) Resolve(style string) (foreground, background termbox.Attribute) {
-	var stylemap *StyleMap
+	var firstMap *StyleMap
+	var secondMap *StyleMap
+
 	if currentOutputMode == termbox.OutputNormal {
-		stylemap = &p.Style16
+		firstMap = &p.Style16
+		secondMap = &p.Style16
 	} else if currentOutputMode == termbox.Output256 {
-		stylemap = &p.Style256
+		firstMap = &p.Style256
+		secondMap = &p.Style16
 	}
 
 	// default styles, if nothing is found
@@ -92,19 +92,35 @@ func (p *Palate) Resolve(style string) (foreground, background termbox.Attribute
 	var bg = termbox.ColorBlack
 
 	// find the styles in the map
-	if stylemap != nil {
-		var found bool
-		fg, found = stylemap.StyleFG[style]
+	var found bool
+	fg, found = firstMap.StyleFG[style]
+	if !found {
+		fg, found = secondMap.StyleFG[style]
 		if !found {
-			fg = stylemap.DefaultFG
+			fg = firstMap.DefaultFG
 		}
-		bg, found = stylemap.StyleBG[style]
+	}
+	bg, found = firstMap.StyleBG[style]
+	if !found {
+		bg, found = secondMap.StyleBG[style]
 		if !found {
-			bg = stylemap.DefaultBG
+			bg = firstMap.DefaultBG
 		}
 	}
 
 	return fg, bg
+}
+
+// ResolveFg resolves the foreground attribute for a named style, returning default if not found.
+func (p *Palate) ResolveFg(style string) termbox.Attribute {
+	fg, _ := p.Resolve(style)
+	return fg
+}
+
+// ResolveBg resolves the background attribute for a named style, returning default if not found.
+func (p *Palate) ResolveBg(style string) termbox.Attribute {
+	_, bg := p.Resolve(style)
+	return bg
 }
 
 // BorderStyle describes the characters that make up a drawn border.

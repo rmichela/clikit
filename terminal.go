@@ -7,6 +7,7 @@ import (
 )
 
 var currentOutputMode termbox.OutputMode
+var currentPalate Palate
 
 // Init initializes the clikit library, and the underlying termbox.
 func Init(mode termbox.OutputMode) error {
@@ -18,8 +19,15 @@ func Init(mode termbox.OutputMode) error {
 			currentOutputMode = mode
 			termbox.SetOutputMode(mode)
 		}
+
+		currentPalate = PalateDefault
 	}
 	return er
+}
+
+// SetPalate sets the active color palate for rendering components
+func SetPalate(palate Palate) {
+	currentPalate = palate
 }
 
 // Close terminates the clikit library, and underlying termbox.

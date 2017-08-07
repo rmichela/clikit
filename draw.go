@@ -44,8 +44,8 @@ func DrawCappedHorizLine(x, y, len int, left, middle, right rune, fg termbox.Att
 
 // DrawHorizLineStyle draws a horizontal line with a given style in the foreground,
 // preserving the background.
-func DrawHorizLineStyle(x, y, len int, style LineStyle, fg termbox.Attribute) {
-	DrawCappedHorizLine(x, y, len, style.LeftCap, style.Horiz, style.RightCap, fg)
+func DrawHorizLineStyle(x, y, len int, lineStyle *LineStyle, fg termbox.Attribute) {
+	DrawCappedHorizLine(x, y, len, lineStyle.LeftCap, lineStyle.Horiz, lineStyle.RightCap, fg)
 }
 
 // DrawVertLine draws a horizontal line with a given rune in the foreground,
@@ -68,8 +68,8 @@ func DrawCappedVertLine(x, y, len int, top, middle, bottom rune, fg termbox.Attr
 
 // DrawVertLineStyle draws a vertical line with a given style in the foreground,
 // preserving the background.
-func DrawVertLineStyle(x, y, len int, style LineStyle, fg termbox.Attribute) {
-	DrawCappedVertLine(x, y, len, style.TopCap, style.Vert, style.BottomCap, fg)
+func DrawVertLineStyle(x, y, len int, lineStyle *LineStyle, fg termbox.Attribute) {
+	DrawCappedVertLine(x, y, len, lineStyle.TopCap, lineStyle.Vert, lineStyle.BottomCap, fg)
 }
 
 // DrawRuneFg draws a rune in the foreground, preserving the background.
@@ -87,16 +87,24 @@ func DrawCellBg(x, y int, bg termbox.Attribute) {
 }
 
 // DrawBorder draws a border in a given style, preserving the background.
-func DrawBorder(x, y, w, h int, style BorderStyle, fg termbox.Attribute) {
-	DrawRuneFg(x, y, style.TopLeft, fg)
-	DrawRuneFg(x+w-1, y, style.TopRight, fg)
-	DrawRuneFg(x, y+h-1, style.BottomLeft, fg)
-	DrawRuneFg(x+w-1, y+h-1, style.BottomRight, fg)
+func DrawBorder(x, y, w, h int, borderStyle *BorderStyle, fg termbox.Attribute) {
+	DrawRuneFg(x, y, borderStyle.TopLeft, fg)
+	DrawRuneFg(x+w-1, y, borderStyle.TopRight, fg)
+	DrawRuneFg(x, y+h-1, borderStyle.BottomLeft, fg)
+	DrawRuneFg(x+w-1, y+h-1, borderStyle.BottomRight, fg)
 
-	DrawHorizLine(x+1, y, w-2, style.Top, fg)
-	DrawHorizLine(x+1, y+h-1, w-2, style.Bottom, fg)
-	DrawVertLine(x, y+1, h-2, style.Left, fg)
-	DrawVertLine(x+w-1, y+1, h-2, style.Right, fg)
+	DrawHorizLine(x+1, y, w-2, borderStyle.Top, fg)
+	DrawHorizLine(x+1, y+h-1, w-2, borderStyle.Bottom, fg)
+	DrawVertLine(x, y+1, h-2, borderStyle.Left, fg)
+	DrawVertLine(x+w-1, y+1, h-2, borderStyle.Right, fg)
+}
+
+// DrawStringFg draws a string in a given style, preserving the background.
+func DrawStringFg(x, y int, str string, fg termbox.Attribute) {
+	chars := []rune(str)
+	for i, c := range chars {
+		DrawRuneFg(x+i, y, c, fg)
+	}
 }
 
 func cellAt(buf []termbox.Cell, x, y int) termbox.Cell {
