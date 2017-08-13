@@ -67,9 +67,21 @@ var PalateDefault = Palate{
 			StyleCyan:    termbox.ColorCyan,
 			StyleWhite:   termbox.ColorWhite,
 			// Component Styles
+			StyleComponentBorder: termbox.ColorBlue,
+			StyleComponentLabel:  termbox.ColorYellow,
+		},
+		StyleBG: map[string]termbox.Attribute{
+			// Color Styles
+			StyleBlack:   termbox.ColorBlack,
+			StyleRed:     termbox.ColorRed,
+			StyleGreen:   termbox.ColorGreen,
+			StyleYellow:  termbox.ColorYellow,
+			StyleBlue:    termbox.ColorBlue,
+			StyleMagenta: termbox.ColorMagenta,
+			StyleCyan:    termbox.ColorCyan,
+			StyleWhite:   termbox.ColorWhite,
+			// Component Styles
 			StyleComponentBackground: termbox.ColorBlack,
-			StyleComponentBorder:     termbox.ColorBlue,
-			StyleComponentLabel:      termbox.ColorYellow,
 		},
 	},
 }

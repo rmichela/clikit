@@ -8,7 +8,7 @@ type DefaultPanelModel struct {
 	title  string
 }
 
-// PanelModel is the base interface for Panel component models.
+// PanelModel is the model interface for Panel component models.
 type PanelModel interface {
 	ContainerModel
 
@@ -41,13 +41,19 @@ func (dpm *DefaultPanelModel) SetTitle(title string) {
 
 // Panel is a Container component with an optional border and title.
 type Panel struct {
-	Model PanelModel
+	Model           PanelModel
+	StyleBackground string
+	StyleBorder     string
+	StyleLabel      string
 }
 
 // NewPanel constructs a new Panel component.
 func NewPanel() *Panel {
 	p := new(Panel)
 	p.Model = new(DefaultPanelModel)
+	p.StyleBackground = StyleComponentBackground
+	p.StyleBorder = StyleComponentBorder
+	p.StyleLabel = StyleComponentLabel
 	return p
 }
 
@@ -65,15 +71,15 @@ func (p *Panel) Arrange() {
 // Draw this Panel on the screen.
 func (p *Panel) Draw() {
 	// Draw background and border
+	FillBgBox(p.Model.Position().X(), p.Model.Position().Y(), p.Model.Width().Value(), p.Model.Height().Value(), currentPalate.ResolveBg(p.StyleBackground))
 	if p.Model.Border() != nil {
-		FillBgBox(p.Model.Position().X(), p.Model.Position().Y(), p.Model.Width().Value(), p.Model.Height().Value(), currentPalate.ResolveBg(StyleComponentBackground))
-		DrawBorder(p.Model.Position().X(), p.Model.Position().Y(), p.Model.Width().Value(), p.Model.Height().Value(), p.Model.Border(), currentPalate.ResolveFg(StyleComponentBorder))
+		DrawBorder(p.Model.Position().X(), p.Model.Position().Y(), p.Model.Width().Value(), p.Model.Height().Value(), p.Model.Border(), currentPalate.ResolveFg(p.StyleBorder))
 	}
 	// Draw title
 	if p.Model.Title() != "" {
-		DrawRuneFg(p.Model.Position().X()+2, p.Model.Position().Y(), '[', currentPalate.ResolveFg(StyleComponentBorder))
+		DrawRuneFg(p.Model.Position().X()+2, p.Model.Position().Y(), '[', currentPalate.ResolveFg(p.StyleBorder))
 		title := " " + p.Model.Title() + " "
-		DrawStringFg(p.Model.Position().X()+3, p.Model.Position().Y(), title, currentPalate.ResolveFg(StyleComponentLabel))
-		DrawRuneFg(p.Model.Position().X()+len(title)+3, p.Model.Position().Y(), ']', currentPalate.ResolveFg(StyleComponentBorder))
+		DrawStringFg(p.Model.Position().X()+3, p.Model.Position().Y(), title, currentPalate.ResolveFg(p.StyleLabel))
+		DrawRuneFg(p.Model.Position().X()+len(title)+3, p.Model.Position().Y(), ']', currentPalate.ResolveFg(p.StyleBorder))
 	}
 }
