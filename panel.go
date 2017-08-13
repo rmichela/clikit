@@ -1,67 +1,79 @@
 package clikit
 
-type PanelModel interface {
-	ContainerModel
-
-	GetBorder() *BorderStyle
-	SetBorder(border *BorderStyle)
-
-	GetTitle() string
-	SetTitle(title string)
-}
-
+// DefaultPanelModel is the base struct for Panel component models.
 type DefaultPanelModel struct {
-	containerModel
+	DefaultContainerModel
 
 	border *BorderStyle
 	title  string
 }
 
-func (dpm *DefaultPanelModel) GetBorder() *BorderStyle {
+// PanelModel is the base interface for Panel component models.
+type PanelModel interface {
+	ContainerModel
+
+	Border() *BorderStyle
+	SetBorder(border *BorderStyle)
+
+	Title() string
+	SetTitle(title string)
+}
+
+// Border returns a pointer to the panel model's border style.
+func (dpm *DefaultPanelModel) Border() *BorderStyle {
 	return dpm.border
 }
 
+// SetBorder sets the panel model's border style.
 func (dpm *DefaultPanelModel) SetBorder(border *BorderStyle) {
 	dpm.border = border
 }
 
-func (dpm *DefaultPanelModel) GetTitle() string {
+// Title returns the panel model's title.
+func (dpm *DefaultPanelModel) Title() string {
 	return dpm.title
 }
 
+// SetTitle sets the panel model's title.
 func (dpm *DefaultPanelModel) SetTitle(title string) {
 	dpm.title = title
 }
 
+// Panel is a Container component with an optional border and title.
 type Panel struct {
 	Model PanelModel
 }
 
+// NewPanel constructs a new Panel component.
 func NewPanel() *Panel {
 	p := new(Panel)
 	p.Model = new(DefaultPanelModel)
 	return p
 }
 
+// Add adds a child component to the Panel.
 func (p *Panel) Add(component Component, hint LayoutHint) {
 	p.Model.Add(component, hint)
 }
 
+// Arrange adjusts the relative positioning of child Components according to the needs
+// of a Layout Manager.
 func (p *Panel) Arrange() {
 
 }
 
+// Draw this Panel on the screen.
 func (p *Panel) Draw() {
 	// Draw background and border
-	if p.Model.GetBorder() != nil {
-		FillBgBox(p.Model.GetX(), p.Model.GetY(), p.Model.GetWidth(), p.Model.GetHeight(), currentPalate.ResolveBg(StyleComponentBackground))
-		DrawBorder(p.Model.GetX(), p.Model.GetY(), p.Model.GetWidth(), p.Model.GetHeight(), p.Model.GetBorder(), currentPalate.ResolveFg(StyleComponentBorder))
+	if p.Model.Border() != nil {
+		FillBgBox(p.Model.Position().X(), p.Model.Position().Y(), p.Model.Width().Value(), p.Model.Height().Value(), currentPalate.ResolveBg(StyleComponentBackground))
+		DrawBorder(p.Model.Position().X(), p.Model.Position().Y(), p.Model.Width().Value(), p.Model.Height().Value(), p.Model.Border(), currentPalate.ResolveFg(StyleComponentBorder))
 	}
 	// Draw title
-	if p.Model.GetTitle() != "" {
-		DrawRuneFg(p.Model.GetX()+2, p.Model.GetY(), '[', currentPalate.ResolveFg(StyleComponentBorder))
-		title := " " + p.Model.GetTitle() + " "
-		DrawStringFg(p.Model.GetX()+3, p.Model.GetY(), title, currentPalate.ResolveFg(StyleComponentLabel))
-		DrawRuneFg(p.Model.GetX()+len(title)+3, p.Model.GetY(), ']', currentPalate.ResolveFg(StyleComponentBorder))
+	if p.Model.Title() != "" {
+		DrawRuneFg(p.Model.Position().X()+2, p.Model.Position().Y(), '[', currentPalate.ResolveFg(StyleComponentBorder))
+		title := " " + p.Model.Title() + " "
+		DrawStringFg(p.Model.Position().X()+3, p.Model.Position().Y(), title, currentPalate.ResolveFg(StyleComponentLabel))
+		DrawRuneFg(p.Model.Position().X()+len(title)+3, p.Model.Position().Y(), ']', currentPalate.ResolveFg(StyleComponentBorder))
 	}
 }

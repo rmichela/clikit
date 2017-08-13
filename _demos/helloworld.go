@@ -18,10 +18,10 @@ func main() {
 
 	panel := clikit.NewPanel()
 	panel.Model.SetTitle("Hello World")
-	panel.Model.SetX(40)
-	panel.Model.SetY(20)
-	panel.Model.SetWidth(30)
-	panel.Model.SetHeight(8)
+	panel.Model.Position().SetX(40)
+	panel.Model.Position().SetY(20)
+	panel.Model.Width().SetValue(30)
+	panel.Model.Height().SetValue(8)
 	panel.Model.SetBorder(&clikit.BorderStyleSingle)
 
 	panel.Draw()
