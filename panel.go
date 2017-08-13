@@ -69,17 +69,41 @@ func (p *Panel) Arrange() {
 }
 
 // Draw this Panel on the screen.
-func (p *Panel) Draw() {
+func (p *Panel) Draw(cvs *Canvas) {
 	// Draw background and border
-	FillBgBox(p.Model.Position().X(), p.Model.Position().Y(), p.Model.Width().Value(), p.Model.Height().Value(), currentPalate.ResolveBg(p.StyleBackground))
+	cvs.FillBgBox(
+		p.Model.Position().X(),
+		p.Model.Position().Y(),
+		p.Model.Width().Value(),
+		p.Model.Height().Value(),
+		currentPalate.ResolveBg(p.StyleBackground))
 	if p.Model.Border() != nil {
-		DrawBorder(p.Model.Position().X(), p.Model.Position().Y(), p.Model.Width().Value(), p.Model.Height().Value(), p.Model.Border(), currentPalate.ResolveFg(p.StyleBorder))
+		cvs.DrawBorder(
+			p.Model.Position().X(),
+			p.Model.Position().Y(),
+			p.Model.Width().Value(),
+			p.Model.Height().Value(),
+			p.Model.Border(),
+			currentPalate.ResolveFg(p.StyleBorder))
 	}
 	// Draw title
 	if p.Model.Title() != "" {
-		DrawRuneFg(p.Model.Position().X()+2, p.Model.Position().Y(), '[', currentPalate.ResolveFg(p.StyleBorder))
+		cvs.DrawRuneFg(
+			p.Model.Position().X()+2,
+			p.Model.Position().Y(),
+			'[',
+			currentPalate.ResolveFg(p.StyleBorder))
+
 		title := " " + p.Model.Title() + " "
-		DrawStringFg(p.Model.Position().X()+3, p.Model.Position().Y(), title, currentPalate.ResolveFg(p.StyleLabel))
-		DrawRuneFg(p.Model.Position().X()+len(title)+3, p.Model.Position().Y(), ']', currentPalate.ResolveFg(p.StyleBorder))
+		cvs.DrawStringFg(
+			p.Model.Position().X()+3,
+			p.Model.Position().Y(),
+			title,
+			currentPalate.ResolveFg(p.StyleLabel))
+		cvs.DrawRuneFg(
+			RelCoord(int(p.Model.Position().X())+len(title)+3),
+			p.Model.Position().Y(),
+			']',
+			currentPalate.ResolveFg(p.StyleBorder))
 	}
 }

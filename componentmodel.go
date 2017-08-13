@@ -8,31 +8,31 @@ package clikit
 // in character cells.
 type Coordinate struct {
 	// The horizontal component of position.
-	x int
+	x RelCoord
 	// The vertical component of position.
-	y int
+	y RelCoord
 	// Used to order components from back to front in case of overlapping
 	// components.
 	z int
 }
 
 // X returns the coordinate's horizontal component.
-func (c *Coordinate) X() int {
+func (c *Coordinate) X() RelCoord {
 	return c.x
 }
 
 // SetX sets the coordinate's horizontal component.
-func (c *Coordinate) SetX(x int) {
+func (c *Coordinate) SetX(x RelCoord) {
 	c.x = x
 }
 
 // Y returns the coordinate's vertical component.
-func (c *Coordinate) Y() int {
+func (c *Coordinate) Y() RelCoord {
 	return c.y
 }
 
 // SetY sets the coordinate's vertical component.
-func (c *Coordinate) SetY(y int) {
+func (c *Coordinate) SetY(y RelCoord) {
 	c.y = y
 }
 
@@ -126,7 +126,7 @@ func (m *DefaultPositionalModel) Height() *Dimension {
 // Component is any UI widget that can be drawn on the screen.
 type Component interface {
 	// Draw this Component to the screen.
-	Draw()
+	Draw(cvs *Canvas)
 }
 
 //==============================

@@ -45,8 +45,17 @@ func NewLabel(text string) *Label {
 }
 
 // Draw a label component to the screen.
-func (l *Label) Draw() {
+func (l *Label) Draw(cvs *Canvas) {
 	s := runewidth.Truncate(l.Model.Text(), l.Model.Width().Value(), "…")
-	FillBgBox(l.Model.Position().X(), l.Model.Position().Y(), l.Model.Width().Value(), l.Model.Height().Value(), currentPalate.ResolveBg(l.StyleBackground))
-	DrawStringFg(l.Model.Position().X(), l.Model.Position().Y(), s, currentPalate.ResolveFg(l.StyleLabel))
+	cvs.FillBgBox(
+		l.Model.Position().X(),
+		l.Model.Position().Y(),
+		l.Model.Width().Value(),
+		l.Model.Height().Value(),
+		currentPalate.ResolveBg(l.StyleBackground))
+	cvs.DrawStringFg(
+		l.Model.Position().X(),
+		l.Model.Position().Y(),
+		s,
+		currentPalate.ResolveFg(l.StyleLabel))
 }

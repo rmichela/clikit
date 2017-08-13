@@ -23,8 +23,10 @@ func main() {
 	panel.Model.Height().SetValue(8)
 	panel.Model.SetBorder(&clikit.BorderStyleSingle)
 
-	label1.Draw()
-	panel.Draw()
+	cvs := clikit.NewCanvasFullScreen()
+
+	label1.Draw(&cvs)
+	panel.Draw(&cvs)
 
 	termbox.Flush()
 	termbox.PollEvent()
