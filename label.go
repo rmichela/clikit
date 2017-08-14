@@ -45,17 +45,20 @@ func NewLabel(text string) *Label {
 }
 
 // Draw a label component to the screen.
-func (l *Label) Draw(cvs *Canvas) {
+func (l *Label) Draw(cvs Canvas) {
 	s := runewidth.Truncate(l.Model.Text(), l.Model.Width().Value(), "…")
 	cvs.FillBgBox(
-		l.Model.Position().X(),
-		l.Model.Position().Y(),
+		0, 0,
 		l.Model.Width().Value(),
 		l.Model.Height().Value(),
 		currentPalate.ResolveBg(l.StyleBackground))
 	cvs.DrawStringFg(
-		l.Model.Position().X(),
-		l.Model.Position().Y(),
+		0, 0,
 		s,
 		currentPalate.ResolveFg(l.StyleLabel))
+}
+
+// PositionalModel returns the component's PositionalModel for use in layout management
+func (l *Label) PositionalModel() PositionalModel {
+	return l.Model
 }

@@ -126,7 +126,9 @@ func (m *DefaultPositionalModel) Height() *Dimension {
 // Component is any UI widget that can be drawn on the screen.
 type Component interface {
 	// Draw this Component to the screen.
-	Draw(cvs *Canvas)
+	Draw(cvs Canvas)
+	// PositionalModel returns the component's PositionalModel for use in layout management
+	PositionalModel() PositionalModel
 }
 
 //==============================
@@ -137,7 +139,7 @@ type Component interface {
 type Container interface {
 	Component
 
-	// Add a Child component to this Container, with
+	// Add a Child component to this Container.
 	Add(component Component, hint LayoutHint)
 
 	// Arrange adjusts the relative positioning of child Components according to the needs
@@ -148,19 +150,25 @@ type Container interface {
 // DefaultContainerModel is the base struct for all containers.
 type DefaultContainerModel struct {
 	DefaultPositionalModel
-	children []layoutComponent
+	ChildComponents []LayoutHintedComponent
 }
 
 // ContainerModel is the base type for all container models.
 type ContainerModel interface {
 	PositionalModel
 	Add(component Component, hint LayoutHint)
+	Children() []LayoutHintedComponent
 }
 
 // Add adds a component to a container.
 func (cm *DefaultContainerModel) Add(component Component, hint LayoutHint) {
-	cm.children = append(cm.children, layoutComponent{
-		component: component,
-		hint:      hint,
+	cm.ChildComponents = append(cm.ChildComponents, LayoutHintedComponent{
+		Component:  component,
+		LayoutHint: hint,
 	})
+}
+
+// Children returns the child Components of this container.
+func (cm *DefaultContainerModel) Children() []LayoutHintedComponent {
+	return cm.ChildComponents
 }

@@ -36,6 +36,17 @@ func (cvs *Canvas) relToAbs(xr, yr RelCoord) (xa, ya AbsCoord) {
 	return AbsCoord(int(xr) + int(cvs.X)), AbsCoord(int(yr) + int(cvs.Y))
 }
 
+// ForChild creates a new derived canvas from the relative coordinates of a child component
+func (cvs *Canvas) ForChild(pm PositionalModel) Canvas {
+	x, y := cvs.relToAbs(pm.Position().X(), pm.Position().Y())
+	return Canvas{
+		X: x,
+		Y: y,
+		W: pm.Width().Value(),
+		H: pm.Height().Value(),
+	}
+}
+
 // isIn determines if a pair of absolute coordinates are
 func (cvs *Canvas) isIn(xa, ya AbsCoord) bool {
 	return cvs.X <= xa && xa < AbsCoord(int(cvs.X)+cvs.W) && cvs.Y <= ya && ya < AbsCoord(int(cvs.Y)+cvs.H)
