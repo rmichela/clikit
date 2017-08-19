@@ -4,10 +4,10 @@ package clikit
 // L A Y O U T   M A N A G E M E N T
 //==================================
 
-// LayoutHint defines a type for providing positioning hints to a layout manager
+// LayoutHint defines a type for providing positioning hints to a layout manager.
 type LayoutHint string
 
-// Constant hints for layout managers.
+// Standard hints for layout managers.
 const (
 	LayoutHintNone   LayoutHint = "none"
 	LayoutHintLeft   LayoutHint = "left"
@@ -15,6 +15,29 @@ const (
 	LayoutHintTop    LayoutHint = "top"
 	LayoutHintBottom LayoutHint = "bottom"
 	LayoutHintCenter LayoutHint = "center"
+)
+
+// LayoutOrientation defines a type for describing the orientation of a layout.
+type LayoutOrientation string
+
+// Standard layout orientations.
+const (
+	LayoutOrientationLeftToRight LayoutOrientation = "left-to-right"
+	LayoutOrientationRightToLeft LayoutOrientation = "right-to-left"
+	LayoutOrientationTopToBottom LayoutOrientation = "top-to-bottom"
+	LayoutOrientationBottomToTop LayoutOrientation = "bottom-to-top"
+)
+
+// LayoutAlignment defines a type for describing the alignment of a layout.
+type LayoutAlignment string
+
+// Standard layout alignments.
+const (
+	LayoutAlignmentLeft   LayoutAlignment = "left"
+	LayoutAlignmentRight  LayoutAlignment = "right"
+	LayoutAlignmentTop    LayoutAlignment = "top"
+	LayoutAlignmentBottom LayoutAlignment = "bottom"
+	LayoutAlignmentCenter LayoutAlignment = "center"
 )
 
 // LayoutHintedComponent binds a component to a layout hint
@@ -28,8 +51,12 @@ type LayoutManagerFunc func(components []LayoutHintedComponent, constraint Layou
 
 // LayoutManagerConstraint defines the constraints enforced by a LayoutManagerFunc.
 type LayoutManagerConstraint struct {
-	Width  int
-	Height int
+	Width       int
+	Height      int
+	Orientation LayoutOrientation
+	Alignment   LayoutAlignment
+	HPad        int
+	VPad        int
 }
 
 // LayoutManager bundles together a LayoutManagerFunc with its associated LayoutManagerConstraint.

@@ -135,6 +135,21 @@ type Component interface {
 // C O N T A I N E R
 //==============================
 
+// ChildSlice defines a slice of LayoutHintedComponents.
+type ChildList []LayoutHintedComponent
+
+func (slice ChildList) Len() int {
+	return len(slice)
+}
+
+func (slice ChildList) Less(i, j int) bool {
+	return slice[i].Component.PositionalModel().Position().Z() < slice[j].Component.PositionalModel().Position().Z()
+}
+
+func (slice ChildList) Swap(i, j int) {
+	slice[i], slice[j] = slice[j], slice[i]
+}
+
 // Container is any UI widget that can contain other widgets.
 type Container interface {
 	Component
@@ -150,14 +165,14 @@ type Container interface {
 // DefaultContainerModel is the base struct for all containers.
 type DefaultContainerModel struct {
 	DefaultPositionalModel
-	ChildComponents []LayoutHintedComponent
+	ChildComponents ChildList
 }
 
 // ContainerModel is the base type for all container models.
 type ContainerModel interface {
 	PositionalModel
 	Add(component Component, hint LayoutHint)
-	Children() []LayoutHintedComponent
+	Children() ChildList
 }
 
 // Add adds a component to a container.
@@ -168,7 +183,7 @@ func (cm *DefaultContainerModel) Add(component Component, hint LayoutHint) {
 	})
 }
 
-// Children returns the child Components of this container.
-func (cm *DefaultContainerModel) Children() []LayoutHintedComponent {
+// Children returns the child Components of this container in z-order from lowest to highest.
+func (cm *DefaultContainerModel) Children() ChildList {
 	return cm.ChildComponents
 }
