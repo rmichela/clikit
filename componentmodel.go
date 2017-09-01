@@ -1,5 +1,7 @@
 package clikit
 
+import "sort"
+
 //==============================
 // P O S I T I O N A L M O D E L
 //==============================
@@ -135,21 +137,6 @@ type Component interface {
 // C O N T A I N E R
 //==============================
 
-// ChildSlice defines a slice of LayoutHintedComponents.
-type ChildList []LayoutHintedComponent
-
-func (slice ChildList) Len() int {
-	return len(slice)
-}
-
-func (slice ChildList) Less(i, j int) bool {
-	return slice[i].Component.PositionalModel().Position().Z() < slice[j].Component.PositionalModel().Position().Z()
-}
-
-func (slice ChildList) Swap(i, j int) {
-	slice[i], slice[j] = slice[j], slice[i]
-}
-
 // Container is any UI widget that can contain other widgets.
 type Container interface {
 	Component
@@ -165,14 +152,14 @@ type Container interface {
 // DefaultContainerModel is the base struct for all containers.
 type DefaultContainerModel struct {
 	DefaultPositionalModel
-	ChildComponents ChildList
+	ChildComponents []LayoutHintedComponent
 }
 
 // ContainerModel is the base type for all container models.
 type ContainerModel interface {
 	PositionalModel
 	Add(component Component, hint LayoutHint)
-	Children() ChildList
+	Children() []LayoutHintedComponent
 }
 
 // Add adds a component to a container.
@@ -181,9 +168,28 @@ func (cm *DefaultContainerModel) Add(component Component, hint LayoutHint) {
 		Component:  component,
 		LayoutHint: hint,
 	})
+	sort.Sort(byZorder(cm.ChildComponents))
 }
 
 // Children returns the child Components of this container in z-order from lowest to highest.
-func (cm *DefaultContainerModel) Children() ChildList {
+func (cm *DefaultContainerModel) Children() []LayoutHintedComponent {
 	return cm.ChildComponents
+}
+
+//========================================
+// C O N T A I N E R   C H I L D   S O R T
+//========================================
+
+type byZorder []LayoutHintedComponent
+
+func (slice byZorder) Len() int {
+	return len(slice)
+}
+
+func (slice byZorder) Less(i, j int) bool {
+	return slice[i].Component.PositionalModel().Position().Z() < slice[j].Component.PositionalModel().Position().Z()
+}
+
+func (slice byZorder) Swap(i, j int) {
+	slice[i], slice[j] = slice[j], slice[i]
 }
