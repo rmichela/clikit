@@ -127,7 +127,7 @@ func (p *Panel) Draw(cvs Canvas) {
 	}
 
 	// Draw children
-	for _, child := range p.Model.Children() {
+	for _, child := range p.Model.Children().InZorder() {
 		child.Component.Draw(cvs.ForChild(child.Component.PositionalModel()))
 	}
 }

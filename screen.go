@@ -59,7 +59,7 @@ func (s *Screen) PositionalModel() PositionalModel {
 
 // Draw this Panel on the screen.
 func (s *Screen) Draw(cvs Canvas) {
-	for _, child := range s.Model.Children() {
+	for _, child := range s.Model.Children().InZorder() {
 		child.Component.Draw(cvs.ForChild(child.Component.PositionalModel()))
 	}
 }

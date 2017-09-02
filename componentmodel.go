@@ -149,17 +149,20 @@ type Container interface {
 	Arrange()
 }
 
+// ChildList is list of a component's children
+type ChildList []LayoutHintedComponent
+
 // DefaultContainerModel is the base struct for all containers.
 type DefaultContainerModel struct {
 	DefaultPositionalModel
-	ChildComponents []LayoutHintedComponent
+	ChildComponents ChildList
 }
 
 // ContainerModel is the base type for all container models.
 type ContainerModel interface {
 	PositionalModel
 	Add(component Component, hint LayoutHint)
-	Children() []LayoutHintedComponent
+	Children() ChildList
 }
 
 // Add adds a component to a container.
@@ -168,28 +171,30 @@ func (cm *DefaultContainerModel) Add(component Component, hint LayoutHint) {
 		Component:  component,
 		LayoutHint: hint,
 	})
-	sort.Sort(byZorder(cm.ChildComponents))
 }
 
-// Children returns the child Components of this container in z-order from lowest to highest.
-func (cm *DefaultContainerModel) Children() []LayoutHintedComponent {
+// Children returns the child Components of this container in the order they
+// were added.
+func (cm *DefaultContainerModel) Children() ChildList {
 	return cm.ChildComponents
 }
 
-//========================================
-// C O N T A I N E R   C H I L D   S O R T
-//========================================
+// InZorder non-destructively sorts a ChildList into z-order.
+func (slice ChildList) InZorder() ChildList {
+	newList := make(ChildList, slice.Len())
+	copy(newList, slice)
+	sort.Sort(newList)
+	return newList
+}
 
-type byZorder []LayoutHintedComponent
-
-func (slice byZorder) Len() int {
+func (slice ChildList) Len() int {
 	return len(slice)
 }
 
-func (slice byZorder) Less(i, j int) bool {
+func (slice ChildList) Less(i, j int) bool {
 	return slice[i].Component.PositionalModel().Position().Z() < slice[j].Component.PositionalModel().Position().Z()
 }
 
-func (slice byZorder) Swap(i, j int) {
+func (slice ChildList) Swap(i, j int) {
 	slice[i], slice[j] = slice[j], slice[i]
 }
