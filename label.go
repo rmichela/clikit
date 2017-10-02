@@ -62,3 +62,8 @@ func (l *Label) Draw(cvs Canvas) {
 func (l *Label) PositionalModel() PositionalModel {
 	return l.Model
 }
+
+// Stretch adjusts the component's dimensions, typically respecting min and max constraints
+func (l *Label) Stretch(w, h int) {
+	l.PositionalModel().Stretch(w, h)
+}

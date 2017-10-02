@@ -23,3 +23,8 @@ func (s *Spacer) Draw(cvs Canvas) {
 func (s *Spacer) PositionalModel() PositionalModel {
 	return s.Model
 }
+
+// Stretch adjusts the component's dimensions, typically respecting min and max constraints
+func (s *Spacer) Stretch(w, h int) {
+	s.PositionalModel().Stretch(w, h)
+}

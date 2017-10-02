@@ -92,6 +92,31 @@ func (c *Dimension) SetMax(max int) {
 	c.max = max
 }
 
+func min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
+
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+// Stretch adjusts a dimension's value, respecting min and max constraints
+func (c *Dimension) Stretch(target int) {
+	if target == c.value {
+		return
+	} else if target > c.value {
+		c.value = min(target, c.max)
+	} else if target < c.value {
+		c.value = max(target, c.min)
+	}
+}
+
 // DefaultPositionalModel is the base struct for all component models.
 type DefaultPositionalModel struct {
 	position Coordinate
@@ -104,6 +129,7 @@ type PositionalModel interface {
 	Position() *Coordinate
 	Width() *Dimension
 	Height() *Dimension
+	Stretch(w, h int)
 }
 
 // Position returns the model's screen coordinates.
@@ -121,6 +147,12 @@ func (m *DefaultPositionalModel) Height() *Dimension {
 	return &m.height
 }
 
+// Stretch adjusts the model's dimensions, respecting min and max constraints
+func (m *DefaultPositionalModel) Stretch(w, h int) {
+	m.Width().Stretch(w)
+	m.Height().Stretch(h)
+}
+
 //==============================
 // C O M P O N E N T
 //==============================
@@ -131,6 +163,8 @@ type Component interface {
 	Draw(cvs Canvas)
 	// PositionalModel returns the component's PositionalModel for use in layout management
 	PositionalModel() PositionalModel
+	// Stretch adjusts the Component's dimensions, typically respecting min and max constraints
+	Stretch(w, h int)
 }
 
 //==============================

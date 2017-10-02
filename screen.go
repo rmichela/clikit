@@ -63,3 +63,16 @@ func (s *Screen) Draw(cvs Canvas) {
 		child.Component.Draw(cvs.ForChild(child.Component.PositionalModel()))
 	}
 }
+
+// Refresh repaints the the screen using this screen object as the root
+func (s *Screen) Refresh() {
+	cvs := NewCanvasFullScreen()
+	s.Arrange()
+	s.Draw(cvs)
+	termbox.Flush()
+}
+
+// Stretch adjusts the component's dimensions, typically respecting min and max constraints
+func (s *Screen) Stretch(w, h int) {
+	s.PositionalModel().Stretch(w, h)
+}

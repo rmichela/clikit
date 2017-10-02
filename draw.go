@@ -47,6 +47,16 @@ func (cvs *Canvas) ForChild(pm PositionalModel) Canvas {
 	}
 }
 
+// Clone creates a new derived Canvas identical to this canvas
+func (cvs *Canvas) Clone() Canvas {
+	return Canvas{
+		X: cvs.X,
+		Y: cvs.Y,
+		W: cvs.W,
+		H: cvs.H,
+	}
+}
+
 // isIn determines if a pair of absolute coordinates are
 func (cvs *Canvas) isIn(xa, ya AbsCoord) bool {
 	return cvs.X <= xa && xa < AbsCoord(int(cvs.X)+cvs.W) && cvs.Y <= ya && ya < AbsCoord(int(cvs.Y)+cvs.H)

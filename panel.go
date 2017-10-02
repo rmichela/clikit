@@ -71,8 +71,6 @@ func (p *Panel) Arrange() {
 		// constrain the layout two cells smaller in each dimension to accomidate the border
 		p.Layout.Resize(p.Model.Width().Value()-2, p.Model.Height().Value()-2)
 		p.Layout.Apply(p.Model.Children())
-		// nudge the children by one cell in each dimension to accomidate for the border
-		p.Layout.Nudge(p.Model.Children(), 1, 1)
 	} else {
 		p.Layout.Resize(p.Model.Width().Value(), p.Model.Height().Value())
 		p.Layout.Apply(p.Model.Children())
@@ -126,8 +124,21 @@ func (p *Panel) Draw(cvs Canvas) {
 			currentPalate.ResolveFg(p.StyleBorder))
 	}
 
+	// Shrink the canvas if there is a border, so children will be drawn inside the border
+	if p.Model.Border() != nil {
+		cvs.X++
+		cvs.Y++
+		cvs.W -= 2
+		cvs.H -= 2
+	}
+
 	// Draw children
 	for _, child := range p.Model.Children().InZorder() {
 		child.Component.Draw(cvs.ForChild(child.Component.PositionalModel()))
 	}
+}
+
+// Stretch adjusts the component's dimensions, typically respecting min and max constraints
+func (p *Panel) Stretch(w, h int) {
+	p.PositionalModel().Stretch(w, h)
 }

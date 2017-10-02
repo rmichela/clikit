@@ -70,16 +70,6 @@ func (lm *LayoutManager) Apply(components []LayoutHintedComponent) {
 	lm.Manager(components, lm.Consraint)
 }
 
-// Nudge adjusts the position of a set of components. Used for offsetting Components within
-// Container after the layout has been applied.
-func (lm *LayoutManager) Nudge(components []LayoutHintedComponent, x, y RelCoord) {
-	for _, lhc := range components {
-		p := lhc.Component.PositionalModel().Position()
-		p.SetX(p.X() + x)
-		p.SetY(p.Y() + y)
-	}
-}
-
 // Resize resizes the layout manager's height and width constraints.
 func (lm *LayoutManager) Resize(w, h int) {
 	lm.Consraint.Width = w
